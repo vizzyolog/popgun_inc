@@ -70,6 +70,7 @@ func (s *ClientInfo) GetByID(ctx context.Context, id string) (oauth2.ClientInfo,
 		return nil, err
 	}
 
+	// need adapter implemetation
 	return ClientInfo{
 		PublicID:     user.ID,
 		PasswordHash: Passw,
