@@ -1,0 +1,22 @@
+# Binaries
+/bin/
+/pkg/
+
+# Dependency directories (remove the comment below if you want to check in vendor/)
+# /vendor/
+
+# Output of the go coverage tool
+*.cover
+
+# IntelliJ IDE files
+.idea/
+
+# Visual Studio Code files
+.vscode/
+
+# Mac OS X specific files
+.DS_Store
+
+# Logs
+*.log
+/cmd/auth/.idea/
