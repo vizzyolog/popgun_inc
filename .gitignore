@@ -27,6 +27,7 @@
 
 /bin/
 /vendor/
+/.postgres/
 
 *.test
 *.test.exe
