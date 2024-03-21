@@ -30,7 +30,7 @@
 
 /.postgres/
 /auth/.postgres
-/taskTrakcek/.postgres
+/taskTracker/.postgres
 
 *.test
 *.test.exe
