@@ -1,60 +1,60 @@
 package kafka
 
 import (
-	"context"
+	_ "embed"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/dangkaka/go-kafka-avro"
 
-	_ "embed"
+	"popug_auth/model"
 )
 
-//go:embed schema/user_schema
-var userSchema string
+type CudUser struct {
+	producer *kafka.AvroProducer
+	schema   string
+	topic    string
+}
 
-var (
-	kafkaBrokers                 = []string{"localhost:9092"}
-	schemaRegistryServers        = []string{"http://localhost:8081"}
-	kafkaTopic            string = "users"
-)
+var kafkaServers = []string{"localhost:9092"}
+var schemaRegistryServers = []string{"http://localhost:8081"}
+var topic = "users"
 
-func NewProducer() *kafka.AvroProducer {
-	producer, err := kafka.NewAvroProducer(kafkaBrokers, schemaRegistryServers)
+func ProducerUserUPD() *CudUser {
+	schemaEmbeded := `{
+		"type": "record",
+		"name": "Example",
+		"fields": [
+		  {"name": "Id", "type": "string"},
+		  {"name": "Type", "type": "string"},
+		  {"name": "Data", "type": "string"}
+		]
+	  }`
+
+	producerAvro, err := kafka.NewAvroProducer(kafkaServers, schemaRegistryServers)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Could not create avro producer: %s", err)
 	}
 
-}
-
-func NewKafka() *Kafkaapp {
-	return &Kafkaapp{
-		w: kafka.NewWriter(kafka.WriterConfig{
-			Brokers: kafkaBrokers,
-		}),
-		r: kafka.NewReader(kafka.ReaderConfig{
-			Brokers: kafkaBrokers,
-			Topic:   kafkaTopic,
-		}),
+	return &CudUser{
+		producer: producerAvro,
+		schema:   schemaEmbeded,
+		topic:    topic,
 	}
 }
 
-// Функция для продюсирования событий в Kafka
-func (k *Kafkaapp) ProduceKafkaEvent(message []byte) error {
-	msg := kafka.Message{
-		Topic: kafkaTopic,
-		Value: message,
-	}
-	return k.w.WriteMessages(context.Background(), msg)
-}
+func (c *CudUser) AddMsg(userdata model.User) {
 
-// Функция для консьюминга событий из Kafka
-func (k *Kafkaapp) ConsumeKafkaEvent() {
-	for {
-		msg, err := k.r.ReadMessage(context.Background())
-		if err != nil {
-			log.Fatal("err to read from Kafka", err)
-			continue
-		}
-		log.Printf("kafka msg: %s", msg.Value)
+	value := `{
+		"Id": "1",
+		"Type": "example_type",
+		"Data": "example_data"
+	}`
+
+	key := time.Now().String()
+	err := c.producer.Add(c.topic, c.schema, []byte(key), []byte(value))
+	if err != nil {
+		log.Fatal("err produce msg", err)
 	}
 }

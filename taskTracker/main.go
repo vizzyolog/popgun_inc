@@ -183,7 +183,12 @@ func (a *app) newTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	var newTask model.Task
 	newTask.Description = r.FormValue("description")
-	newTask.Assignee = a.getRandomDeveloperHandler()
+	randomDeveloperID, err := a.getRandomDeveloperHandler()
+	if err != nil {
+		randomDeveloperID = "unknown developer"
+		log.Println("err to take developer")
+	}
+	newTask.Assignee = randomDeveloperID
 	newTask.ID = uuid.New().String()
 
 	result := a.Db.Create(&newTask)
@@ -193,7 +198,7 @@ func (a *app) newTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *app) getRandomDeveloperHandler() (string, error) {
+func (a *app) getRandomDeveloperHandler() (publicID string, err error) {
 	var developer model.User
 	result := a.Db.Where("role = ?", "developer").Order("RANDOM()").First(&developer)
 	if result.Error != nil {

@@ -39,7 +39,7 @@ func main() {
 		log.Fatalf("err DB.AutoMigrate %v\n", err)
 	}
 
-	kafka := kafkaapp.NewKafka()
+	cudUser := kafkaapp.ProducerUserUPD()
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
@@ -51,7 +51,7 @@ func main() {
 			v, ok := data.(*model.User)
 			if ok {
 				return jwt.MapClaims{
-					identityKey: v.PublicId,
+					identityKey: v.PublicID,
 					roleKey:     v.Role,
 				}
 			}
@@ -126,10 +126,10 @@ func main() {
 		handlers.RegisterPage(c)
 	})
 	r.POST("/register", func(c *gin.Context) {
-		handlers.CreateUserHandler(c, db, kafka)
+		handlers.CreateUserHandler(c, db, cudUser)
 	})
 	r.POST("/change-role", authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
-		handlers.ChangeUserRoleHandler(c, db, kafka)
+		handlers.ChangeUserRoleHandler(c, db, cudUser)
 	})
 	r.POST("/login", authMiddleware.LoginHandler)
 	r.POST("/logout", logoutHandler)

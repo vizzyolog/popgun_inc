@@ -7,6 +7,7 @@ require (
 	github.com/dangkaka/go-kafka-avro v0.0.0-20200609051134-e714c259f1e9
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.6.0
+	github.com/vizzyolog/popug_schema v0.0.0-20240321134659-e7439701d193
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.7
 )

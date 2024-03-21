@@ -12,25 +12,16 @@ import (
 
 const schemaDir = "schemaReg/schemas"
 
-// SchemaInfo хранит информацию о схеме, включая саму схему и ее версию.
 type SchemaInfo struct {
 	Schema  *gojsonschema.Schema
 	Version int
 }
 
-// SchemaRegistry теперь хранит схемы в виде вложенных карт,
-// где внешний ключ - это название сущности, внутренний ключ - тип действия,
-// а значение - список схем с информацией о версии.
 type SchemaRegistry struct {
 	schemas map[string]map[string][]SchemaInfo
 }
 
 func NewSchemaRegistry() *SchemaRegistry {
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(fmt.Sprintf("Не удалось получить рабочую директорию: %v", err))
-	}
-	fmt.Printf("Текущая рабочая директория: %s\n", wd)
 	schemas, err := loadSchemas(schemaDir)
 	if err != nil {
 		panic(err)

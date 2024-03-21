@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 	"text/template"
 
@@ -57,7 +56,7 @@ func RegisterPage(c *gin.Context) {
 
 }
 
-func CreateUserHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.Kafkaapp) {
+func CreateUserHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.CudUser) {
 	var form model.LoginForm
 	if err := c.ShouldBind(&form); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -71,7 +70,7 @@ func CreateUserHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.Kafkaapp) {
 	}
 
 	user := model.User{
-		PublicId:     uuid.New().String(),
+		PublicID:     uuid.New().String(),
 		UserName:     form.Username,
 		PasswordSalt: pwdSalt,
 		PasswordHash: pwdHash,
@@ -83,16 +82,11 @@ func CreateUserHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.Kafkaapp) {
 		return
 	}
 
-	userToSend, err := json.Marshal(user)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при маршалировании пользователя в JSON"})
-		return
-	}
-	go kafka.ProduceKafkaEvent(userToSend)
+	go kafka.AddMsg(user)
 	c.Redirect(http.StatusSeeOther, "/siginup")
 }
 
-func ChangeUserRoleHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.Kafkaapp) {
+func ChangeUserRoleHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.CudUser) {
 	// Получаем имя пользователя и новую роль из запроса
 	var changeRoleRequest struct {
 		Username string `json:"userName"`
@@ -129,12 +123,7 @@ func ChangeUserRoleHandler(c *gin.Context, db *gorm.DB, kafka *kafkaapp.Kafkaapp
 		return
 	}
 
-	updEvent, err := json.Marshal(user)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при маршалировании пользователя в JSON"})
-		return
-	}
-	go kafka.ProduceKafkaEvent(updEvent)
+	go kafka.AddMsg(user)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Роль пользователя успешно обновлена"})
 }
