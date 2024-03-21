@@ -5,7 +5,12 @@ import (
 	"log"
 
 	"github.com/dangkaka/go-kafka-avro"
+
+	_ "embed"
 )
+
+//go:embed schema/user_schema
+var userSchema string
 
 var (
 	kafkaBrokers                 = []string{"localhost:9092"}
@@ -13,11 +18,12 @@ var (
 	kafkaTopic            string = "users"
 )
 
-func NewProducer() {
+func NewProducer() *kafka.AvroProducer {
 	producer, err := kafka.NewAvroProducer(kafkaBrokers, schemaRegistryServers)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func NewKafka() *Kafkaapp {

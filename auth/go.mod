@@ -4,6 +4,7 @@ go 1.22.0
 
 require (
 	github.com/appleboy/gin-jwt/v2 v2.9.2
+	github.com/dangkaka/go-kafka-avro v0.0.0-20200609051134-e714c259f1e9
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.6.0
 	gorm.io/driver/postgres v1.5.7
@@ -17,7 +18,6 @@ require (
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
-	github.com/dangkaka/go-kafka-avro v0.0.0-20200609051134-e714c259f1e9 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.1.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
@@ -36,7 +36,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.3.0 // indirect
@@ -46,9 +45,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/pierrec/lz4 v0.0.0-20190327172049-315a67e90e41 // indirect
-	github.com/pierrec/lz4/v4 v4.1.15 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a // indirect
-	github.com/segmentio/kafka-go v0.4.47 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.7.0 // indirect
