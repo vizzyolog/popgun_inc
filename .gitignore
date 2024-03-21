@@ -47,6 +47,7 @@ test.out
 *.cover
 *.out
 
+*.code-workspace
 *.dSYM/
 
 .DS_Store

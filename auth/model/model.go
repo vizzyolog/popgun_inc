@@ -20,7 +20,7 @@ type LoginForm struct {
 
 type User struct {
 	gorm.Model   `json:"-"`
-	PublicId     string    `gorm:"string" json:"uid"`
+	PublicID     string    `gorm:"string" json:"uid"`
 	UserName     string    `gorm:"unique" json:"username"`
 	Password     string    `json:"-"`
 	PasswordHash string    `json:"-"`
