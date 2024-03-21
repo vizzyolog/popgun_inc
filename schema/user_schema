@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "UserEvent",
+  "namespace": "com.yourcompany.user",
+  "fields": [
+    {"name": "PublicId", "type": "string"},
+    {"name": "UserName", "type": "string"},
+    {"name": "Role", "type": "string"},
+    {"name": "CreatedAT", "type": "string", "logicalType": "timestamp-millis"},
+    {"name": "UpdatedAT", "type": "string", "logicalType": "timestamp-millis"}
+  ]
+}

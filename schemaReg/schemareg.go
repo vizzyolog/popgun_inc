@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/xeipuuv/gojsonschema"
@@ -25,11 +26,6 @@ type SchemaRegistry struct {
 }
 
 func NewSchemaRegistry() *SchemaRegistry {
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(fmt.Sprintf("Не удалось получить рабочую директорию: %v", err))
-	}
-	fmt.Printf("Текущая рабочая директория: %s\n", wd)
 	schemas, err := loadSchemas(schemaDir)
 	if err != nil {
 		panic(err)
@@ -58,16 +54,13 @@ func (sr *SchemaRegistry) Validate(entity, action string, version int, document 
 		}
 	}
 
-	return fmt.Errorf("version %s not found for entity %s and action %s", version, entity, action)
+	return fmt.Errorf("version %v not found for entity %s and action %s", version, entity, action)
 }
 
 func loadSchemas(dirPath string) (map[string]map[string][]SchemaInfo, error) {
 	schemas := make(map[string]map[string][]SchemaInfo)
 
 	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
 		if !info.IsDir() && filepath.Ext(path) == ".json" {
 			relPath, _ := filepath.Rel(dirPath, path)
 			parts := strings.Split(relPath, string(os.PathSeparator))
@@ -76,7 +69,10 @@ func loadSchemas(dirPath string) (map[string]map[string][]SchemaInfo, error) {
 			}
 			entity, action, versionFile := parts[0], parts[1], parts[2]
 			version := strings.TrimSuffix(versionFile, filepath.Ext(versionFile))
-
+			versionInt, err := strconv.Atoi(version)
+			if err != nil {
+				return err
+			}
 			schemaLoader := gojsonschema.NewReferenceLoader("file://" + path)
 			schema, err := gojsonschema.NewSchema(schemaLoader)
 			if err != nil {
@@ -86,7 +82,7 @@ func loadSchemas(dirPath string) (map[string]map[string][]SchemaInfo, error) {
 			if _, ok := schemas[entity]; !ok {
 				schemas[entity] = make(map[string][]SchemaInfo)
 			}
-			schemas[entity][action] = append(schemas[entity][action], SchemaInfo{Schema: schema, Version: version})
+			schemas[entity][action] = append(schemas[entity][action], SchemaInfo{Schema: schema, Version: versionInt})
 		}
 		return nil
 	})

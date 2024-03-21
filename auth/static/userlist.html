@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>User list</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.role-select').on('change', function() {
+                    var userName = $(this).data('username').toString(); 
+                    var newRole = $(this).val();
+                    var dataToSend = JSON.stringify({ userName: userName, newRole: newRole });
+                    
+                    $.ajax({
+                        url: '/change-role',
+                        type: 'POST',
+                        contentType: 'application/json', 
+                        data: dataToSend, 
+                        success: function(response) {
+                            console.log(response); // Вывод в консоль ответа сервера
+                            alert('Роль успешно изменена.');
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(xhr.responseText); // Вывод в консоль текста ошибки
+                            alert('Ошибка при изменении роли.');
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+
+<body>
+    <div class="container">
+        <div class="text-right">
+            <form action="/logout" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+        <h1>User list</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>CreatedAT</th>   
+                    <th>UpdatedAT</th>   
+                    <th>Role</th>                
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Users}}
+                <tr>
+                    <td>{{.UserName}}</td>
+                    <td>{{.CreatedAT}}</td>
+                    <td>{{.UpdatedAT}}</td>
+                    <td>
+                        <select class="form-control role-select" data-username="{{.UserName}}">
+                            {{ $userRole := .Role}}
+                            {{range $index, $role := $.Roles}}
+                                <option value="{{$role}}" {{if eq $role $userRole}}selected{{end}}>{{$role}}</option>
+                            {{end}}    
+                        </select>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

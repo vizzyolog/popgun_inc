@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Task list</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    </head>
+
+<body>
+    <div class="container">
+        <div class="text-right">
+            <button id="openModalBtn" class="btn btn-success">New Task</button>
+        </div>
+        <h1>Tasks</h1>
+        <div class="text-left">
+            <form action="/newtask" method="post" style="display: inline;">
+                <input type="text" name="description" required placeholder="Описание задачи">
+                <button type="submit" class="btn btn-danger">Создать задачу</button>
+            </form>        
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>TaskID</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Assigned</th>   
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {{range .}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Description}}</td>
+                    <td>{{.Status}}</td>
+                    <td>{{.Assigned}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
