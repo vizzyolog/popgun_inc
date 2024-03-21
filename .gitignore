@@ -27,7 +27,10 @@
 
 /bin/
 /vendor/
+
 /.postgres/
+/auth/.postgres
+/taskTrakcek/.postgres
 
 *.test
 *.test.exe
